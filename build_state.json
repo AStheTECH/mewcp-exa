@@ -1,0 +1,11 @@
+{
+  "tool_spec": true,
+  "server_setup": true,
+  "tool_groups": {
+    "core": true,
+    "agent": true
+  },
+  "validation_rounds": 1,
+  "validation_passed": true,
+  "readme": true
+}
