@@ -3,8 +3,13 @@
 import logging
 import os
 
-SERVER_VERSION = "v1.1.0"
-BREAKING_CHANGES: list[dict] = []
+SERVER_VERSION = "v2.0.0"
+BREAKING_CHANGES: list[dict] = [
+    {
+        "version": "v2.0.0",
+        "change": "Renamed tool 'search' to 'search_web' for verb_noun naming consistency.",
+    },
+]
 
 EXA_API_BASE = "https://api.exa.ai"
 

@@ -18,7 +18,7 @@ logger = logging.getLogger("exa-mcp.tools.core")
 def register_core_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(
-        name="search",
+        name="search_web",
         description=(
             "Perform an Exa web search and return results. "
             "Takes a query and optional filters for domain inclusion/exclusion, date range, and search type. "
@@ -27,7 +27,7 @@ def register_core_tools(mcp: FastMCP) -> None:
         ),
         annotations=ToolAnnotations(readOnlyHint=True, openWorldHint=True),
     )
-    def search(
+    def search_web(
         query: str = Field(description="The search query text."),
         num_results: int = Field(default=10, description="Number of results to return (1–100)."),
         include_domains: list[str] | None = Field(default=None, description="Only return results from these domains."),
@@ -36,7 +36,7 @@ def register_core_tools(mcp: FastMCP) -> None:
         end_published_date: str | None = Field(default=None, description="ISO 8601 date — only return results published before this date."),
         type: str | None = Field(default="auto", description="Search type: 'keyword', 'neural', or 'auto'."),
     ) -> SearchResult:
-        tlog = ToolLogger(logger, "search")
+        tlog = ToolLogger(logger, "search_web")
 
         if num_results < 1 or num_results > 100:
             return _err(SearchResult, tlog, "VALIDATION_ERROR", "num_results must be 1–100", 400)

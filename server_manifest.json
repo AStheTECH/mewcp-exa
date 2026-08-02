@@ -4,7 +4,7 @@
     "name": "mewcp-exa",
     "package": "mewcp_exa_mcp",
     "auth": "static",
-    "version": "v1.1.0",
+    "version": "v2.0.0",
     "api_base": "https://api.exa.ai"
   },
   "tools": {
@@ -14,7 +14,7 @@
         "doc_source": "",
         "register_fn": "register_core_tools",
         "tools": {
-          "search": {
+          "search_web": {
             "endpoint": "POST /search",
             "description": "Performs an Exa web search and returns matching results with titles, URLs, published dates, and text snippets.",
             "tier": "GET",
