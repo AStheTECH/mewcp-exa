@@ -33,7 +33,7 @@ def _handle_request_exc(result_class, tlog, exc):
             error=ToolError(code="AUTH_ERROR", message=str(exc)))
     tlog.failure("SERVER_ERROR", str(exc))
     return result_class(success=False, statusCode=500, retriable=False,
-        error=ToolError(code="SERVER_ERROR", message=str(exc)))
+        error=ToolError(code="SERVER_ERROR", message="Unexpected server error"))
 
 
 def _upstream_err(result_class, tlog, status, data, retry_after=None):
