@@ -9,7 +9,7 @@ from pydantic import Field
 from .. import service
 from ..config import CONNECT_TIMEOUT, READ_TIMEOUT
 from ..logging_utils import ToolLogger
-from ..schemas import SearchResult, SearchData, SearchResultItem, ContentsResult, ContentsData, ContentResult, AnswerResult, AnswerData, Citation
+from ..schemas.core import SearchResult, SearchData, SearchResultItem, ContentsResult, ContentsData, ContentResult, AnswerResult, AnswerData, Citation
 from ._helpers import _err, _handle_request_exc, _upstream_err
 
 logger = logging.getLogger("exa-mcp.tools.core")
