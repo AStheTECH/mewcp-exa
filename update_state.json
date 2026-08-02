@@ -1,0 +1,16 @@
+{
+  "phase_infra": true,
+  "phase_schema_base": true,
+  "phase_helpers": true,
+  "tool_groups": {
+    "core": true,
+    "agent": true
+  },
+  "phase_schema_cleanup": true,
+  "phase_init": true,
+  "phase_server": true,
+  "phase_manifest": true,
+  "validation_rounds": 1,
+  "validation_passed": true,
+  "readme": false
+}
