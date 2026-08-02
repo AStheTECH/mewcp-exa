@@ -9,7 +9,7 @@ from pydantic import Field
 from .. import service
 from ..config import CONNECT_TIMEOUT, READ_TIMEOUT
 from ..logging_utils import ToolLogger
-from ..schemas import (
+from ..schemas.agent import (
     RunResult, RunData, RunListResult, RunListData, RunSummary,
     RunCancelResult, RunCancelData, RunDeleteResult, RunDeleteData,
     RunEventListResult, RunEventListData, RunEvent,
@@ -138,7 +138,7 @@ def register_agent_tools(mcp: FastMCP) -> None:
             "Stops the agent's execution and updates the run status. "
             "The response includes both the previous and current status."
         ),
-        annotations=ToolAnnotations(readOnlyHint=False, openWorldHint=True),
+        annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=True, openWorldHint=True),
     )
     def cancel_run(
         id: str = Field(description="The ID of the run to cancel."),
