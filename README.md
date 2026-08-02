@@ -22,7 +22,7 @@ Perfect for:
 
 
 <details>
-<summary><code>search</code> — Perform an Exa web search and return results</summary>
+<summary><code>search_web</code> — Perform an Exa web search and return results</summary>
 
 Perform an Exa web search and return results. Takes a query and optional filters for domain inclusion/exclusion, date range, and search type. Returns matching web results with titles, URLs, published dates, and text snippets. Use `autoprompt` from the response to refine or repeat the search.
 
