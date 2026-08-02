@@ -3,7 +3,7 @@
 import logging
 import os
 
-SERVER_VERSION = "v1.0.0"
+SERVER_VERSION = "v1.1.0"
 BREAKING_CHANGES: list[dict] = []
 
 EXA_API_BASE = "https://api.exa.ai"

@@ -1,0 +1,213 @@
+{
+  "manifest_version": 1,
+  "server": {
+    "name": "mewcp-exa",
+    "package": "mewcp_exa_mcp",
+    "auth": "static",
+    "version": "v1.1.0",
+    "api_base": "https://api.exa.ai"
+  },
+  "tools": {
+    "groups": {
+      "core": {
+        "file": "tools/core_tools.py",
+        "doc_source": "",
+        "register_fn": "register_core_tools",
+        "tools": {
+          "search": {
+            "endpoint": "POST /search",
+            "description": "Performs an Exa web search and returns matching results with titles, URLs, published dates, and text snippets.",
+            "tier": "GET",
+            "params": [
+              { "name": "query", "type": "str", "required": true,
+                "description": "The search query text." },
+              { "name": "num_results", "type": "int", "required": false,
+                "description": "Number of results to return (1-100)." },
+              { "name": "include_domains", "type": "list[str] | None", "required": false,
+                "description": "Only return results from these domains." },
+              { "name": "exclude_domains", "type": "list[str] | None", "required": false,
+                "description": "Exclude results from these domains." },
+              { "name": "start_published_date", "type": "str | None", "required": false,
+                "description": "ISO 8601 date - only return results published after this date." },
+              { "name": "end_published_date", "type": "str | None", "required": false,
+                "description": "ISO 8601 date - only return results published before this date." },
+              { "name": "type", "type": "str | None", "required": false,
+                "description": "Search type: 'keyword', 'neural', or 'auto'." }
+            ],
+            "response_fields": [
+              { "name": "results", "type": "list[SearchResultItem]" },
+              { "name": "autoprompt", "type": "str" },
+              { "name": "resolvedSearchType", "type": "str" }
+            ],
+            "schema": { "data": "SearchData", "result": "SearchResult" }
+          },
+          "get_contents": {
+            "endpoint": "POST /contents",
+            "description": "Extracts clean, LLM-ready content from URLs and returns structured content per URL including text, highlights, and summaries.",
+            "tier": "GET",
+            "params": [
+              { "name": "urls", "type": "list[str]", "required": true,
+                "description": "List of URLs to retrieve content from." },
+              { "name": "text_format", "type": "str | None", "required": false,
+                "description": "Output format: 'text', 'html', or 'markdown'." },
+              { "name": "livecrawl", "type": "str | None", "required": false,
+                "description": "Crawling mode: 'always', 'never', or 'fallback'." },
+              { "name": "highlight", "type": "dict | None", "required": false,
+                "description": "Highlight settings with sentences_per_highlight and highlights_per_url." }
+            ],
+            "response_fields": [
+              { "name": "results", "type": "list[ContentResult]" },
+              { "name": "num_results", "type": "int" }
+            ],
+            "schema": { "data": "ContentsData", "result": "ContentsResult" }
+          },
+          "get_answer": {
+            "endpoint": "POST /answer",
+            "description": "Gets an LLM answer to a question informed by Exa search results, returning generated answer text with citations from source URLs.",
+            "tier": "GET",
+            "params": [
+              { "name": "query", "type": "str", "required": true,
+                "description": "The question to answer." },
+              { "name": "text_format", "type": "str | None", "required": false,
+                "description": "Answer format: 'text' or 'markdown'." },
+              { "name": "include_domains", "type": "list[str] | None", "required": false,
+                "description": "Only use sources from these domains." },
+              { "name": "exclude_domains", "type": "list[str] | None", "required": false,
+                "description": "Exclude sources from these domains." },
+              { "name": "model", "type": "str | None", "required": false,
+                "description": "Model to use for answer generation." }
+            ],
+            "response_fields": [
+              { "name": "answer", "type": "str" },
+              { "name": "citations", "type": "list[Citation]" },
+              { "name": "autoprompt", "type": "str" }
+            ],
+            "schema": { "data": "AnswerData", "result": "AnswerResult" }
+          }
+        }
+      },
+      "agent": {
+        "file": "tools/agent_tools.py",
+        "doc_source": "",
+        "register_fn": "register_agent_tools",
+        "tools": {
+          "create_run": {
+            "endpoint": "POST /agent/runs",
+            "description": "Creates a new Exa agent run that works toward a specified goal and returns the run details.",
+            "tier": "CREATE",
+            "params": [
+              { "name": "goal", "type": "str", "required": true,
+                "description": "The goal or task for the agent to complete." },
+              { "name": "instructions", "type": "str | None", "required": false,
+                "description": "Additional instructions for the agent." },
+              { "name": "model", "type": "str | None", "required": false,
+                "description": "Model to use for the agent." },
+              { "name": "max_steps", "type": "int | None", "required": false,
+                "description": "Maximum number of steps the agent can take (1-100)." },
+              { "name": "temperature", "type": "float | None", "required": false,
+                "description": "Temperature for the model (0.0-1.0)." }
+            ],
+            "response_fields": [
+              { "name": "id", "type": "str" },
+              { "name": "status", "type": "str" },
+              { "name": "goal", "type": "str" },
+              { "name": "created_at", "type": "str" },
+              { "name": "updated_at", "type": "str" },
+              { "name": "completed_at", "type": "str" },
+              { "name": "result", "type": "str" },
+              { "name": "model", "type": "str" },
+              { "name": "max_steps", "type": "int" }
+            ],
+            "schema": { "data": "RunData", "result": "RunResult" }
+          },
+          "get_run": {
+            "endpoint": "GET /agent/runs/{id}",
+            "description": "Retrieves the details of a specific agent run, including status, goal, model, and result if completed.",
+            "tier": "GET",
+            "params": [
+              { "name": "id", "type": "str", "required": true,
+                "description": "The ID of the run to retrieve." }
+            ],
+            "response_fields": [
+              { "name": "id", "type": "str" },
+              { "name": "status", "type": "str" },
+              { "name": "goal", "type": "str" },
+              { "name": "created_at", "type": "str" },
+              { "name": "updated_at", "type": "str" },
+              { "name": "completed_at", "type": "str" },
+              { "name": "result", "type": "str" },
+              { "name": "model", "type": "str" },
+              { "name": "max_steps", "type": "int" }
+            ],
+            "schema": { "data": "RunData", "result": "RunResult" }
+          },
+          "list_runs": {
+            "endpoint": "GET /agent/runs",
+            "description": "Retrieves a list of agent runs with their current status, goal, and creation timestamps.",
+            "tier": "GET",
+            "params": [
+              { "name": "limit", "type": "int", "required": false,
+                "description": "Maximum number of runs to return (1-100)." },
+              { "name": "offset", "type": "int", "required": false,
+                "description": "Pagination offset." }
+            ],
+            "response_fields": [
+              { "name": "runs", "type": "list[RunSummary]" },
+              { "name": "total", "type": "int" }
+            ],
+            "schema": { "data": "RunListData", "result": "RunListResult" }
+          },
+          "cancel_run": {
+            "endpoint": "POST /agent/runs/{id}/cancel",
+            "description": "Cancels an in-progress agent run and returns both the previous and current status.",
+            "tier": "DELETE",
+            "params": [
+              { "name": "id", "type": "str", "required": true,
+                "description": "The ID of the run to cancel." }
+            ],
+            "response_fields": [
+              { "name": "id", "type": "str" },
+              { "name": "status", "type": "str" },
+              { "name": "previous_status", "type": "str" }
+            ],
+            "schema": { "data": "RunCancelData", "result": "RunCancelResult" }
+          },
+          "delete_run": {
+            "endpoint": "DELETE /agent/runs/{id}",
+            "description": "Permanently deletes an existing agent run. Irreversible; requires explicit user confirmation.",
+            "tier": "DELETE",
+            "params": [
+              { "name": "id", "type": "str", "required": true,
+                "description": "The ID of the run to delete." }
+            ],
+            "response_fields": [
+              { "name": "id", "type": "str" },
+              { "name": "deleted", "type": "bool" }
+            ],
+            "schema": { "data": "RunDeleteData", "result": "RunDeleteResult" }
+          },
+          "list_run_events": {
+            "endpoint": "GET /agent/runs/{id}/events",
+            "description": "Retrieves a chronological list of events for a specific agent run, including steps, tool calls, and results.",
+            "tier": "GET",
+            "params": [
+              { "name": "id", "type": "str", "required": true,
+                "description": "The ID of the run to get events for." },
+              { "name": "limit", "type": "int", "required": false,
+                "description": "Maximum events to return (1-200)." },
+              { "name": "offset", "type": "int", "required": false,
+                "description": "Pagination offset." }
+            ],
+            "response_fields": [
+              { "name": "events", "type": "list[RunEvent]" },
+              { "name": "total", "type": "int" }
+            ],
+            "schema": { "data": "RunEventListData", "result": "RunEventListResult" }
+          }
+        }
+      }
+    }
+  },
+  "resources": {},
+  "prompts": {}
+}
